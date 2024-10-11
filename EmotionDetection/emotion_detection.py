@@ -15,12 +15,24 @@ def emotion_detector(text_to_analyze):
     response = requests.post(url, json=myobj, headers=header)
 
     # Parse the response from the API
-    formatted_response = json.loads(response.text)
+    response_text = json.loads(response.text)
 
-    return formatted_response
+    # Extract the emotion scores, find the dominant emotion, and pack it in a dictionary
+    emotions = response_text['emotionPredictions'][0]['emotion']
+    dominant_emotion = max(emotions, key=emotions.get)
+    formatted_emotions = {
+        'anger': emotions['anger'],
+        'disgust': emotions['disgust'],
+        'fear': emotions['fear'],
+        'joy': emotions['joy'],
+        'sadness': emotions['sadness'],
+        'dominant_emotion': dominant_emotion
+    }
+
+    return  formatted_emotions
 
 if __name__ == "__main__":
     # Ask for user input interactively
     text = input("Enter the text to analyze: ")
-    result = emotion_detector(text)
-    print(f"Detected emotion: {result}")
+    emotions = emotion_detector(text)
+    print(json.dumps(emotions, indent=4))
