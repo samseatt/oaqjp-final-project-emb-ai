@@ -12,6 +12,9 @@ def emot_detecter():
     
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
+    
+    if response['dominant_emotion'] == None:
+        return "<b>Invalid text! Please try again!</b>"
 
     anger_score = response['anger']
     disgust_score = response['disgust']
@@ -25,7 +28,6 @@ def emot_detecter():
         f"'disgust': {disgust_score}, 'fear': {fear_score}, 'joy': {joy_score} and "
         f"'sadness': {sadness_score}. The dominant emotion is <b>{dominant_emotion}</b>."
     )
-
     return result
 
 if __name__ == "__main__":
